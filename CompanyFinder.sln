@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompanyFinderLib", "Company
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyFinderConsole", "CompanyFinderConsole\CompanyFinderConsole.csproj", "{F66A4849-1346-4943-B0CC-7D84FA597DBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanyFinderForm", "CompanyFinderForm\CompanyFinderForm.csproj", "{4239E10E-D782-4601-9301-CC4FC5E7EE0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F66A4849-1346-4943-B0CC-7D84FA597DBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F66A4849-1346-4943-B0CC-7D84FA597DBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F66A4849-1346-4943-B0CC-7D84FA597DBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4239E10E-D782-4601-9301-CC4FC5E7EE0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4239E10E-D782-4601-9301-CC4FC5E7EE0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4239E10E-D782-4601-9301-CC4FC5E7EE0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4239E10E-D782-4601-9301-CC4FC5E7EE0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
