@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "PHeKZCRiQVGqvL1qlcOFJR7+xfdDtKF4H4IANEexKQhEjp2tLi4zpq7Db5zlL9/3EigAbOkY3RgatyE8PpwtoA==",
+  "dgSpecHash": "2UpWI4aDkske+YImiC2k9xCR3+74d5p0JUb2AIM61/WTQzuUXO3k6QE49yhdu/u1Db6pyPThBx+7u0qYBa19mw==",
   "success": true,
   "projectFilePath": "C:\\Users\\PC9\\Desktop\\VS\\joaca\\c#\\CompanyFinder\\CompanyFinderLib\\CompanyFinderLib.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\PC9\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\PC9\\.nuget\\packages\\restsharp\\106.15.0\\restsharp.106.15.0.nupkg.sha512"
+  ],
   "logs": []
 }
