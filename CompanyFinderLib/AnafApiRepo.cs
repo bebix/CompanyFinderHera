@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using RestSharp;
 using Newtonsoft.Json;
-using static CompanyFinderLib.Company;
+using CompanyFinderLib.Models;
+using CompanyFinderLib.Contracts;
 
-namespace CompanyFinderLib
+namespace CompanyFinderLib.Repos
 {
     public class AnafAPI : ICompanyRepo
     {
@@ -20,7 +21,7 @@ namespace CompanyFinderLib
         {
             public List<CompanyBody> bodies { get; set; }
         }
-        public static dynamic PostBackupApiData(string input)
+        private static dynamic PostBackupApiData(string input)
         {
             var jsonObject = new CompanyRoot();
             jsonObject.bodies = new List<CompanyBody>

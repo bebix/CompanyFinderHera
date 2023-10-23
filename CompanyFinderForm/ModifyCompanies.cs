@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CompanyFinderLib;
+using CompanyFinderLib.Models;
+using CompanyFinderLib.WorkUnit;
+
 
 namespace CompanyFinderForm
 {

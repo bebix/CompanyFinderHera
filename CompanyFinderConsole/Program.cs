@@ -7,6 +7,10 @@ using System.IO;
 using System.Threading.Tasks;
 using CompanyFinderLib;
 using System.Threading;
+using CompanyFinderLib.Models;
+using CompanyFinderLib.WorkUnit;
+using CompanyFinderLib.Contracts;
+using CompanyFinderLib.Repos;
 
 namespace CompanyFinderConsole
 {

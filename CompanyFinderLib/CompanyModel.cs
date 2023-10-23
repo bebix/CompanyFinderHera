@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompanyFinderLib
+namespace CompanyFinderLib.Models
 {
     public class Company
     {

@@ -5,17 +5,14 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading.Tasks;
-using static CompanyFinderLib.Company;
+using CompanyFinderLib.Contracts;
+using CompanyFinderLib.Models;
+using CompanyFinderLib.Repos;
 
 
-namespace CompanyFinderLib
+namespace CompanyFinderLib.WorkUnit
 {
 
-    public interface ICompanyRepo
-    {
-        Company SearchByCui(string id);
-        List<Company> GetAllCompanies();
-    }
     public class UnitOfWork
     {
         public enum ApiSource

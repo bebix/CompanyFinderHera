@@ -10,3 +10,15 @@ C:\Users\PC9\Desktop\VS\joaca\c#\CompanyFinder\CompanyFinderLib\obj\Debug\net6.0
 C:\Users\PC9\Desktop\VS\joaca\c#\CompanyFinder\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.dll
 C:\Users\PC9\Desktop\VS\joaca\c#\CompanyFinder\CompanyFinderLib\obj\Debug\net6.0\ref\CompanyFinderLib.dll
 C:\Users\PC9\Desktop\VS\joaca\c#\CompanyFinder\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.pdb
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\bin\Debug\net6.0\CompanyFinderLib.deps.json
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\bin\Debug\net6.0\CompanyFinderLib.dll
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\bin\Debug\net6.0\CompanyFinderLib.pdb
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.csproj.AssemblyReference.cache
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.GeneratedMSBuildEditorConfig.editorconfig
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.AssemblyInfoInputs.cache
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.AssemblyInfo.cs
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.csproj.CoreCompileInputs.cache
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.dll
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\refint\CompanyFinderLib.dll
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.pdb
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\ref\CompanyFinderLib.dll

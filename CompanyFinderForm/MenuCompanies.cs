@@ -1,4 +1,5 @@
-﻿using CompanyFinderLib;
+﻿using CompanyFinderLib.Models;
+using CompanyFinderLib.WorkUnit;
 
 
 namespace CompanyFinderForm

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static CompanyFinderLib.UnitOfWork;
+using CompanyFinderLib.Contracts;
+using CompanyFinderLib.Models;
 using RestSharp;
 using Newtonsoft.Json;
 
-namespace CompanyFinderLib
+namespace CompanyFinderLib.Repos
 {
     public class OPENAPIRepo : ICompanyRepo
     {
