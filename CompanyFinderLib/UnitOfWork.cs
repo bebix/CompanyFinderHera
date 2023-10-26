@@ -8,12 +8,25 @@ using System.Threading.Tasks;
 using CompanyFinderLib.Contracts;
 using CompanyFinderLib.Models;
 using CompanyFinderLib.Repos;
-
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CompanyFinderLib.WorkUnit
 {
 
-    public class UnitOfWork
+    public interface IUnitOfWork
+    {
+        public void AddUnverifiedDataToModel(Company company, List<Company> companies);
+        public List<Company> AddDataToModel(string input, int FromWhere, List<Company> companies);
+        public void AddDataToDb(List<Company> companies, string path, string id, int index, int source);
+        public void DeleteDataFromDb(string id);
+        public Company CreateCompany(string denumire, string cif, string adresa, string? telefon, string judet);
+        public Company SearchInModel(string input, List<Company> companies);
+        public void DeleteCompanyInModel(Company company, List<Company> companies);
+
+
+    }
+    public class UnitOfWork : IUnitOfWork
     {
         public enum ApiSource
         {
@@ -29,15 +42,20 @@ namespace CompanyFinderLib.WorkUnit
 
 
         private readonly ICompanyRepo repo;
+        public UnitOfWork()
+        {
+            HostApplicationBuilder builder = Host.CreateApplicationBuilder();
+            builder.Services.AddTransient<ICompanyRepo, CacheRepo>();
+            IHost host = builder.Build();
+            repo = (ICompanyRepo)host.Services.GetService(typeof(ICompanyRepo));
+        }
         public UnitOfWork(ApiSource source)
         {
-
             if (source == ApiSource.anaf)
                 repo = new AnafAPI();
-            else if (source == ApiSource.openApi)
+            else 
                 repo = new OPENAPIRepo();
-            else
-                repo = new CacheRepo();
+            
         }
 
         public void AddUnverifiedDataToModel(Company company, List<Company> companies)

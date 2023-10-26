@@ -11,13 +11,24 @@ using CompanyFinderLib.Models;
 using CompanyFinderLib.WorkUnit;
 using CompanyFinderLib.Contracts;
 using CompanyFinderLib.Repos;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 
 namespace CompanyFinderConsole
 {
-    //NXGR1oykt6RZpPHT_Yw_Gj9vMvrZ5Vg2ref2bLadmZVaSXkpnA
+   
     class Program
     {
-        public static List<Company> companies = new List<Company>();
+        private IHost _host;
+        private IUnitOfWork _rep;
+        public Program()
+        {
+            HostApplicationBuilder builder = Host.CreateApplicationBuilder();
+            builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+            _host = builder.Build();
+            _rep = (IUnitOfWork)_host.Services.GetService(typeof(IUnitOfWork));
+        }
         public bool ok = false;
         static void CompanyCreateAndModifyWriteline()
         {
@@ -48,10 +59,11 @@ namespace CompanyFinderConsole
                 DisplayCompany(companies[i]);
 
         }
-        public void DisplayInput_GetCompany(UnitOfWork rep, UnitOfWork.ApiSource apiSource)
+        public void DisplayInput_GetCompany(UnitOfWork.ApiSource apiSource, List<Company> companies)
         {
             string key;
             int source;
+            UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.anaf);
             Console.WriteLine("Introduce cif-ul");
             key = Console.ReadLine();
             Console.WriteLine("Introduce sursa din care vrei sa preiei informatia:");
@@ -59,29 +71,29 @@ namespace CompanyFinderConsole
             source = Int32.Parse(Console.ReadLine());
             apiSource = (UnitOfWork.ApiSource)source;
             Company company = new Company();
-            company = rep.SearchInModel(key, companies);
+            company = _rep.SearchInModel(key, companies);
             if (company != null)
                 DisplayCompany(company);
             else
             {
-                rep = new UnitOfWork(apiSource);
                 rep.AddDataToModel(key, 0, companies);
                 company = rep.SearchInModel(key, companies);
                 DisplayCompany(company);
             }
         }
-        public void DisplayInput_CreateCompany(UnitOfWork rep)
+        public void DisplayInput_CreateCompany(List<Company> companies)
         {
 
             string source;
             string index;
+            UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.anaf);
             Console.WriteLine("Introduce cif-ul firmei");
             string cif = Console.ReadLine();
-            Company FindedCompany = rep.SearchInModel(cif, companies);
+            Company FindedCompany = _rep.SearchInModel(cif, companies);
             if (FindedCompany == null)
             {
                 rep.AddDataToModel(cif, 2, companies);
-                FindedCompany = rep.SearchInModel(cif, companies);
+                FindedCompany = _rep.SearchInModel(cif, companies);
             }
             if (FindedCompany != null)
             {
@@ -102,12 +114,12 @@ namespace CompanyFinderConsole
                             int indexInt = Int32.Parse(index);
                             Console.WriteLine("Introduce datele:");
                             string text = GetDisplayValue();
-                            Company company = rep.CreateCompany(indexInt == 1 ? text : FindedCompany.denumire, cif
+                            Company company = _rep.CreateCompany(indexInt == 1 ? text : FindedCompany.denumire, cif
                                                               , indexInt == 2 ? text : FindedCompany.adresa
                                                               , indexInt == 3 ? text : FindedCompany.telefon
                                                               , indexInt == 4 ? text : FindedCompany.judet);
 
-                            rep.AddUnverifiedDataToModel(company, companies);
+                            _rep.AddUnverifiedDataToModel(company, companies);
                             Console.Clear();
                             DisplayCompany(company);
                         }
@@ -122,12 +134,12 @@ namespace CompanyFinderConsole
             {
                 List<string> namespaces = new List<string>() { "denumire", "adresa", "telefon", "judet" };
                 List<string> text = GetAllDisplayValue(namespaces);
-                Company company = rep.CreateCompany(text[0], cif, text[1], text[2], text[3]);
-                rep.AddUnverifiedDataToModel(company, companies);
+                Company company = _rep.CreateCompany(text[0], cif, text[1], text[2], text[3]);
+                _rep.AddUnverifiedDataToModel(company, companies);
             }
 
         }
-        public void DisplayInput_DeleteCompany(UnitOfWork rep)
+        public void DisplayInput_DeleteCompany( List<Company> companies)
         {
 
             Console.WriteLine("Introduce cif-ul:             2: Pentru lista firmelor!");
@@ -136,18 +148,18 @@ namespace CompanyFinderConsole
             {
                 DisplayAllCompanies(companies);
                 Console.WriteLine();
-                DisplayInput_DeleteCompany(rep);
+                DisplayInput_DeleteCompany(companies);
             }
             else
             {
-                Company company = rep.SearchInModel(id, companies);
+                Company company = _rep.SearchInModel(id, companies);
                 if (company != null)
                 {
                     Console.WriteLine($"Confirma stergerea? {company.denumire}");
                     Console.WriteLine("1: Da       2: Nu");
                     if (Console.ReadLine() == "1")
                     {
-                        rep.DeleteCompanyInModel(company, companies);
+                        _rep.DeleteCompanyInModel(company, companies);
                         Console.Clear();
                         Console.WriteLine("Compania a fost stearsa!");
                     }
@@ -161,7 +173,7 @@ namespace CompanyFinderConsole
                     DisplayAllCompanies(companyQuery2);
                     Thread.Sleep(7000);
                     Console.Clear();
-                    DisplayInput_DeleteCompany(rep);
+                    DisplayInput_DeleteCompany(companies);
                 }
             }
 
@@ -187,12 +199,12 @@ namespace CompanyFinderConsole
 
             }
         }
-        public void DisplayInput_ModifyCompany(UnitOfWork rep)
+        public void DisplayInput_ModifyCompany(List<Company> companies)
         {
             Console.WriteLine("Introduce cif-ul");
             string id = Console.ReadLine();
             string source = "1";
-            Company company = rep.SearchInModel(id, companies);
+            Company company = _rep.SearchInModel(id, companies);
             companies.Remove(company);
             if (company != null)
             {
@@ -205,7 +217,7 @@ namespace CompanyFinderConsole
                         string value = null;
                         ModifyValues(company, value, source);
                         companies.Add(company);
-                        rep.AddDataToDb(companies, UnitOfWork.path, company.cif, companies.Count - 1, 1);
+                        _rep.AddDataToDb(companies, UnitOfWork.path, company.cif, companies.Count - 1, 1);
                         Console.Clear();
                         DisplayCompany(company);
                     }
@@ -219,7 +231,7 @@ namespace CompanyFinderConsole
 
         }
 
-        public void DisplayInput_GeneratePseudoCompanies(UnitOfWork rep, int seed, int NumberOfCompanies)
+        public void DisplayInput_GeneratePseudoCompanies(int seed, int NumberOfCompanies, List<Company> companies)
         {
             int tester = -1;
             List<Company> jsonCompanies = new List<Company>();
@@ -241,14 +253,14 @@ namespace CompanyFinderConsole
                         i--;
                     }
                 }
-                rep.AddDataToDb(jsonCompanies, UnitOfWork.otherPath, seedText, 0, 0);
+                _rep.AddDataToDb(jsonCompanies, UnitOfWork.otherPath, seedText, 0, 0);
             }
             else
             {
                 Console.WriteLine($"Numarul maxim de companii este {companies.Count}!");
                 Console.WriteLine("Introduce numarul de companii pe care vrei sa le esantionezi!");
                 int numOfCompanies = Int32.Parse(Console.ReadLine());
-                DisplayInput_GeneratePseudoCompanies(rep, seed, numOfCompanies);
+                DisplayInput_GeneratePseudoCompanies(seed, numOfCompanies, companies);
             }
         }
 
@@ -256,13 +268,12 @@ namespace CompanyFinderConsole
         {
             UnitOfWork.ApiSource apiSource = UnitOfWork.ApiSource.anaf;
             ok = true;
-            UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.cache);
-            companies = rep.AddDataToModel(null, 1, companies);
+            companies = _rep.AddDataToModel(null, 1, companies);
             if (input == "11")
                 Console.Clear();
             if (input == "1")
             {
-                DisplayInput_GetCompany(rep, apiSource);
+                DisplayInput_GetCompany(apiSource, companies);
             }
             if (input == "2")
             {
@@ -272,23 +283,21 @@ namespace CompanyFinderConsole
             {
                 Console.Clear();
                 ICompanyRepo repo = new CacheRepo();
-                DisplayBySettings();
+                DisplayBySettings(companies);
             }
             if (input == "4")
             {
-                apiSource = UnitOfWork.ApiSource.anaf;
-                rep = new UnitOfWork(apiSource);
-                DisplayInput_CreateCompany(rep);
+                DisplayInput_CreateCompany(companies);
 
             }
             if (input == "5")
             {
-                DisplayInput_DeleteCompany(rep);
+                DisplayInput_DeleteCompany(companies);
             }
             if (input == "6")
             {
 
-                DisplayInput_ModifyCompany(rep);
+                DisplayInput_ModifyCompany(companies);
             }
             if (input == "7")
             {
@@ -298,7 +307,7 @@ namespace CompanyFinderConsole
                 Console.WriteLine("Introduce numarul de companii pe care vrei sa le esantionezi!");
                 string text2 = Console.ReadLine();
                 int NumberOfCompanies = Int32.Parse(text2);
-                DisplayInput_GeneratePseudoCompanies(rep, seed, NumberOfCompanies);
+                DisplayInput_GeneratePseudoCompanies(seed, NumberOfCompanies, companies);
             }
 
 
@@ -320,7 +329,7 @@ namespace CompanyFinderConsole
             string value = Console.ReadLine().ToUpper();
             return value;
         }
-        void DisplayBySettings()
+        void DisplayBySettings(List<Company> companies)
         {
             ICompanyRepo repo = new CacheRepo();
             string input;
@@ -414,6 +423,7 @@ namespace CompanyFinderConsole
         public static void Main()
         {
             Program p = new Program();
+            List<Company> companies = new List<Company>();
             string input;
             Display();
             input = Console.ReadLine();

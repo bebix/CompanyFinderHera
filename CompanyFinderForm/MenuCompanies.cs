@@ -16,7 +16,7 @@ namespace CompanyFinderForm
 
         public void ShowDialogTest(int input)
         {
-            UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.cache);
+            UnitOfWork rep = new UnitOfWork();
             List<Company> companies = rep.AddDataToModel(null, 1, null);
             Company company = new Company();
             if (input == 1)
@@ -28,7 +28,7 @@ namespace CompanyFinderForm
                 company = rep.SearchInModel(textBox1.Text, companies);
                 if(company == null)
                 {
-                    rep = new UnitOfWork(UnitOfWork.ApiSource.anaf);
+                    rep = new UnitOfWork();
                     rep.AddDataToModel(textBox1.Text, 3, companies);
                     company = companies[companies.Count - 1];
                 }

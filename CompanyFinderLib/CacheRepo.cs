@@ -17,10 +17,19 @@ namespace CompanyFinderLib.Repos
         public Company SearchByCui(string id)
         {
             string pathName = $@"{UnitOfWork.path}{id}.json";
-            string text = File.ReadAllText(pathName);
-            dynamic json = JsonConvert.DeserializeObject(text);
-            return json;
-
+            if (File.Exists(pathName))
+            { 
+                string text = File.ReadAllText(pathName);
+                dynamic json = JsonConvert.DeserializeObject(text);
+                Company company = new Company();
+                company.denumire = json.denumire;
+                company.cif = json.cif;
+                company.adresa = json.adresa;
+                company.judet = json.judet;
+                company.telefon = json.telefon;
+                return company;
+            }
+            return null;
         }
         public List<Company> GetAllCompanies()
         {
