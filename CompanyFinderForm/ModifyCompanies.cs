@@ -15,8 +15,8 @@ namespace CompanyFinderForm
 {
     public partial class ModifyCompanies : Form
     {
-        public static Company company = new Company();
-        public static List<Company> companies = new List<Company>();
+        public static CompanyDTO company = new CompanyDTO();
+        public static List<CompanyDTO> companies = new List<CompanyDTO>();
         public ModifyCompanies()
         {
             InitializeComponent();
@@ -52,7 +52,7 @@ namespace CompanyFinderForm
         public void AddCompany(TextBox textBox1, TextBox textBox2, TextBox textBox3, TextBox textBox4, TextBox textBox5, string input)
         {
             UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.cache);
-            Company company = new Company();
+            CompanyDTO company = new CompanyDTO();
             company.cif = textBox1.Text;
             company.denumire = textBox2.Text;
             company.adresa = textBox3.Text;

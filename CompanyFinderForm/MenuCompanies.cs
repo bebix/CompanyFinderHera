@@ -17,8 +17,8 @@ namespace CompanyFinderForm
         public void ShowDialogTest(int input)
         {
             UnitOfWork rep = new UnitOfWork();
-            List<Company> companies = rep.AddDataToModel(null, 1, null);
-            Company company = new Company();
+            List<CompanyDTO> companies = rep.AddDataToModel(null, 1, null);
+            CompanyDTO company = new CompanyDTO();
             if (input == 1)
             {
                 dataGridView1.DataSource = companies;

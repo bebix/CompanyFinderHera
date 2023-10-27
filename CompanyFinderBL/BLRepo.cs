@@ -8,21 +8,21 @@ using CompanyFinderLib.Models;
 
 namespace CompanyFinderBL
 {
-    public class ModelRepo
+    public class BLRepo
     {
         private IHost _host;
         private IUnitOfWork _rep;
-        public ModelRepo()
+        public BLRepo()
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder();
             builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
             _host = builder.Build();
             _rep = (IUnitOfWork)_host.Services.GetService(typeof(IUnitOfWork));
         }
-        public CompanyModel GetCompany(List<Company> companies, string key)
+        public CompanyVM GetCompany(List<CompanyDTO> companies, string key)
         {
             var mapper = MapperConfig.InitializeAutomapper();
-            Company company = new Company();
+            CompanyDTO company = new CompanyDTO();
             company = _rep.SearchInModel(key, companies);
             UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.anaf);
             if(company == null)
@@ -30,31 +30,31 @@ namespace CompanyFinderBL
                 rep.AddDataToModel(key, 0, companies);
                 company = rep.SearchInModel(key, companies);
             }
-            CompanyModel model = mapper.Map<Company, CompanyModel>(company);
+            CompanyVM model = mapper.Map<CompanyDTO, CompanyVM>(company);
             return model;
         }
-        public List<CompanyModel> GetCompanies(List<Company> companies)
+        public List<CompanyVM> GetCompanies(List<CompanyDTO> companies)
         {
             var mapper = MapperConfig.InitializeAutomapper();
-            List<CompanyModel> companyModels = new List<CompanyModel>();
+            List<CompanyVM> companyModels = new List<CompanyVM>();
             foreach(var company in companies)
             {
-                CompanyModel comp = mapper.Map<Company, CompanyModel>(company);
+                CompanyVM comp = mapper.Map<CompanyDTO, CompanyVM>(company);
                 companyModels.Add(comp);
             }
             return companyModels;
         }
 
-        public void DeleteCompany(List<Company> companies, Company company) 
+        public void DeleteCompany(List<CompanyDTO> companies, CompanyDTO company) 
         {
             _rep.DeleteCompanyInModel(company, companies);
         }
-        public CompanyModel ModifyCompany(List<Company> companies, Company company)
+        public CompanyVM ModifyCompany(List<CompanyDTO> companies, CompanyDTO company)
         {
             var mapper = MapperConfig.InitializeAutomapper();
             companies.Add(company);
             _rep.AddDataToDb(companies, UnitOfWork.path, company.cif, companies.Count - 1, 1);
-            CompanyModel model = mapper.Map<Company, CompanyModel>(company);
+            CompanyVM model = mapper.Map<CompanyDTO, CompanyVM>(company);
             return model;
         }
     }

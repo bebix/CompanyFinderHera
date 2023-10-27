@@ -41,7 +41,7 @@ namespace CompanyFinderLib.Repos
             return data;
 
         }
-        public Company SearchByCui(string id)
+        public CompanyDTO SearchByCui(string id)
         {
 
             dynamic data = PostBackupApiData(id);
@@ -50,7 +50,7 @@ namespace CompanyFinderLib.Repos
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             dynamic result = JsonConvert.DeserializeObject(response.Content);
-            Company company = new Company();
+            CompanyDTO company = new CompanyDTO();
             if (result.found.Count != 0)
             {
                 company.denumire = result.found[0].date_generale.denumire;
@@ -62,7 +62,7 @@ namespace CompanyFinderLib.Repos
             }
             return company;
         }
-        public List<Company> GetAllCompanies()
+        public List<CompanyDTO> GetAllCompanies()
         {
             return null;
         }

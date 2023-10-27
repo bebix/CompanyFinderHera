@@ -42,7 +42,7 @@ namespace CompanyFinderConsole
             Console.WriteLine();
         }
 
-        static void DisplayCompany(CompanyModel company)
+        static void DisplayCompany(CompanyVM company)
         {
             Console.WriteLine
             (
@@ -54,32 +54,32 @@ namespace CompanyFinderConsole
             );
         }
 
-        static void DisplayAllCompanies(List<CompanyModel> companies)
+        static void DisplayAllCompanies(List<CompanyVM> companies)
         {
             for (int i = 0; i < companies.Count; i++)
                 DisplayCompany(companies[i]);
 
         }
-        public void DisplayInput_GetCompany(List<Company> companies)
+        public void DisplayInput_GetCompany(List<CompanyDTO> companies)
         {
             string key;
-            CompanyModel company = new CompanyModel();
+            CompanyVM company = new CompanyVM();
             Console.WriteLine("Introduce cif-ul");
             key = Console.ReadLine();
-            ModelRepo repo = new ModelRepo();
+            BLRepo repo = new BLRepo();
             company = repo.GetCompany(companies, key);
             DisplayCompany(company);
         }
-        public void DisplayInput_CreateCompany(List<Company> companies)
+        public void DisplayInput_CreateCompany(List<CompanyDTO> companies)
         {
-            CompanyModel companyModel = new CompanyModel();
-            ModelRepo repo = new ModelRepo();
+            CompanyVM companyModel = new CompanyVM();
+            BLRepo repo = new BLRepo();
             string source;
             string index;
             UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.anaf);
             Console.WriteLine("Introduce cif-ul firmei");
             string cif = Console.ReadLine();
-            Company FindedCompany = _rep.SearchInModel(cif, companies);
+            CompanyDTO FindedCompany = _rep.SearchInModel(cif, companies);
             if (FindedCompany == null)
             {
                 rep.AddDataToModel(cif, 2, companies);
@@ -105,7 +105,7 @@ namespace CompanyFinderConsole
                             int indexInt = Int32.Parse(index);
                             Console.WriteLine("Introduce datele:");
                             string text = GetDisplayValue();
-                            Company company = _rep.CreateCompany(indexInt == 1 ? text : FindedCompany.denumire, cif
+                            CompanyDTO company = _rep.CreateCompany(indexInt == 1 ? text : FindedCompany.denumire, cif
                                                               , indexInt == 2 ? text : FindedCompany.adresa
                                                               , indexInt == 3 ? text : FindedCompany.telefon
                                                               , indexInt == 4 ? text : FindedCompany.judet);
@@ -125,15 +125,15 @@ namespace CompanyFinderConsole
             {
                 List<string> namespaces = new List<string>() { "denumire", "adresa", "telefon", "judet" };
                 List<string> text = GetAllDisplayValue(namespaces);
-                Company company = _rep.CreateCompany(text[0], cif, text[1], text[2], text[3]);
+                CompanyDTO company = _rep.CreateCompany(text[0], cif, text[1], text[2], text[3]);
                 _rep.AddUnverifiedDataToModel(company, companies);
             }
 
         }
-        public void DisplayInput_DeleteCompany(List<Company> companies)
+        public void DisplayInput_DeleteCompany(List<CompanyDTO> companies)
         {
-            ModelRepo repo = new ModelRepo();
-            List<CompanyModel> companyModels = repo.GetCompanies(companies);
+            BLRepo repo = new BLRepo();
+            List<CompanyVM> companyModels = repo.GetCompanies(companies);
             Console.WriteLine("Introduce cif-ul:             2: Pentru lista firmelor!");
             string id = Console.ReadLine();
             if (id == "2")
@@ -144,7 +144,7 @@ namespace CompanyFinderConsole
             }
             else
             {
-                Company company = _rep.SearchInModel(id, companies);
+                CompanyDTO company = _rep.SearchInModel(id, companies);
                 if (company != null)
                 {
                     Console.WriteLine($"Confirma stergerea? {company.denumire}");
@@ -170,7 +170,7 @@ namespace CompanyFinderConsole
             }
 
         }
-        public void ModifyValues(Company company, string value, string source)
+        public void ModifyValues(CompanyDTO company, string value, string source)
         {
             Console.WriteLine("Introduce valoarea:");
             value = Console.ReadLine();
@@ -191,13 +191,13 @@ namespace CompanyFinderConsole
 
             }
         }
-        public void DisplayInput_ModifyCompany(List<Company> companies)
+        public void DisplayInput_ModifyCompany(List<CompanyDTO> companies)
         {
-            ModelRepo repo = new ModelRepo();
+            BLRepo repo = new BLRepo();
             Console.WriteLine("Introduce cif-ul");
             string id = Console.ReadLine();
             string source = "1";
-            Company company = _rep.SearchInModel(id, companies);
+            CompanyDTO company = _rep.SearchInModel(id, companies);
             companies.Remove(company);
             if (company != null)
             {
@@ -209,7 +209,7 @@ namespace CompanyFinderConsole
                     {
                         string value = null;
                         ModifyValues(company, value, source);
-                        CompanyModel companyModel = repo.ModifyCompany(companies, company);
+                        CompanyVM companyModel = repo.ModifyCompany(companies, company);
                         Console.Clear();
                         DisplayCompany(companyModel);
                     }
@@ -223,10 +223,10 @@ namespace CompanyFinderConsole
 
         }
 
-        public void DisplayInput_GeneratePseudoCompanies(int seed, int NumberOfCompanies, List<Company> companies)
+        public void DisplayInput_GeneratePseudoCompanies(int seed, int NumberOfCompanies, List<CompanyDTO> companies)
         {
             int tester = -1;
-            List<Company> jsonCompanies = new List<Company>();
+            List<CompanyDTO> jsonCompanies = new List<CompanyDTO>();
             Random fixedRandom = new Random(seed);
             string seedText = "-1";
             if (NumberOfCompanies <= companies.Count)
@@ -237,7 +237,7 @@ namespace CompanyFinderConsole
                     seedText = seed.ToString();
                     if (!jsonCompanies.Contains(companies[index]))
                     {
-                        CompanyModel companyModel = new CompanyModel();
+                        CompanyVM companyModel = new CompanyVM();
                         companyModel.SetData(companies[index]);
                         DisplayCompany(companyModel);
                         jsonCompanies.Add(companies[index]);
@@ -258,12 +258,12 @@ namespace CompanyFinderConsole
             }
         }
 
-        public void Route(string input, List<Company> companies)
+        public void Route(string input, List<CompanyDTO> companies)
         {
             UnitOfWork.ApiSource apiSource = UnitOfWork.ApiSource.anaf;
             ok = true;
             companies = _rep.AddDataToModel(null, 1, companies);
-            List<CompanyModel> companyModels = new List<CompanyModel>();
+            List<CompanyVM> companyModels = new List<CompanyVM>();
             if (input == "11")
                 Console.Clear();
             if (input == "1")
@@ -274,7 +274,7 @@ namespace CompanyFinderConsole
             {
                 foreach(var i in companies)
                 {
-                    CompanyModel comp = new CompanyModel();
+                    CompanyVM comp = new CompanyVM();
                     comp.SetData(i);
                     companyModels.Add(comp);
                 }
@@ -330,7 +330,7 @@ namespace CompanyFinderConsole
             string value = Console.ReadLine().ToUpper();
             return value;
         }
-        void DisplayBySettings(List<Company> companies)
+        void DisplayBySettings(List<CompanyDTO> companies)
         {
             ICompanyRepo repo = new CacheRepo();
             string input;
@@ -343,10 +343,10 @@ namespace CompanyFinderConsole
             input = Console.ReadLine();
             string value;
             companies = repo.GetAllCompanies();
-            List<CompanyModel> companyModels = new List<CompanyModel>();
-            foreach (Company company in companies) 
+            List<CompanyVM> companyModels = new List<CompanyVM>();
+            foreach (CompanyDTO company in companies) 
             {
-                CompanyModel comp = new CompanyModel();
+                CompanyVM comp = new CompanyVM();
                 comp.SetData(company);
                 companyModels.Add(comp);
             }
@@ -431,7 +431,7 @@ namespace CompanyFinderConsole
         public static void Main()
         {
             Program p = new Program();
-            List<Company> companies = new List<Company>();
+            List<CompanyDTO> companies = new List<CompanyDTO>();
             string input;
             Display();
             input = Console.ReadLine();

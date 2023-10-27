@@ -45,7 +45,7 @@ namespace CompanyFinderLib.WorkUnit
             
         }
 
-        public void AddUnverifiedDataToModel(Company company, List<Company> companies)
+        public void AddUnverifiedDataToModel(CompanyDTO company, List<CompanyDTO> companies)
         {
 
             if (company.cif != null)
@@ -56,7 +56,7 @@ namespace CompanyFinderLib.WorkUnit
             else
                 Console.WriteLine("Acest cif nu exista!");
         }
-        public List<Company> AddDataToModel(string input, int FromWhere, List<Company> companies)
+        public List<CompanyDTO> AddDataToModel(string input, int FromWhere, List<CompanyDTO> companies)
         {
 
             if (FromWhere == 1)
@@ -66,7 +66,7 @@ namespace CompanyFinderLib.WorkUnit
             }
             else
             {
-                Company result = repo.SearchByCui(input);
+                CompanyDTO result = repo.SearchByCui(input);
                 if (result.denumire != null)
                 {
                     companies.Add(result);
@@ -86,7 +86,7 @@ namespace CompanyFinderLib.WorkUnit
             return null;
         }
 
-        public void AddDataToDb(List<Company> companies, string path, string id, int index, int source)
+        public void AddDataToDb(List<CompanyDTO> companies, string path, string id, int index, int source)
         {
 
             string pathName = $@"{path}{id}.json";
@@ -107,9 +107,9 @@ namespace CompanyFinderLib.WorkUnit
             File.Delete(pathName);
 
         }
-        public Company CreateCompany(string denumire, string cif, string adresa, string? telefon, string judet)
+        public CompanyDTO CreateCompany(string denumire, string cif, string adresa, string? telefon, string judet)
         {
-            Company company = new Company();
+            CompanyDTO company = new CompanyDTO();
             company.denumire = denumire;
             company.cif = cif;
             company.adresa = adresa;
@@ -119,7 +119,7 @@ namespace CompanyFinderLib.WorkUnit
             return company;
         }
 
-        public Company SearchInModel(string input, List<Company> companies)
+        public CompanyDTO SearchInModel(string input, List<CompanyDTO> companies)
         {
 
             for (int i = 0; i < companies.Count; i++)
@@ -130,7 +130,7 @@ namespace CompanyFinderLib.WorkUnit
             return null;
 
         }
-        public void DeleteCompanyInModel(Company company, List<Company> companies)
+        public void DeleteCompanyInModel(CompanyDTO company, List<CompanyDTO> companies)
         {
             DeleteDataFromDb(company.cif);
             companies.Remove(company);

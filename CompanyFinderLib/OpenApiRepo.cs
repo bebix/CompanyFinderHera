@@ -12,7 +12,7 @@ namespace CompanyFinderLib.Repos
 {
     public class OPENAPIRepo : ICompanyRepo
     {
-        public Company SearchByCui(string id)
+        public CompanyDTO SearchByCui(string id)
         {
             var url = $"https://api.openapi.ro/api/companies/{id}";
             var key = "NXGR1oykt6RZpPHT_Yw_Gj9vMvrZ5Vg2ref2bLadmZVaSXkpnA";
@@ -21,7 +21,7 @@ namespace CompanyFinderLib.Repos
             request.AddHeader("x-api-key", key);
             IRestResponse response = client.Execute(request);
             dynamic json = JsonConvert.DeserializeObject(response.Content);
-            Company company = new Company();
+            CompanyDTO company = new CompanyDTO();
             if (json.denumire != null)
             {
                 company.denumire = json.denumire;
@@ -33,7 +33,7 @@ namespace CompanyFinderLib.Repos
             }
             return company;
         }
-        public List<Company> GetAllCompanies()
+        public List<CompanyDTO> GetAllCompanies()
         {
             return null;
         }

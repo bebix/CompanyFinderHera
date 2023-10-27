@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CompanyFinderLib.Models
 {
-    public class Company
+    public class CompanyDTO
     {
         public string denumire { get; set; }
         public string telefon { get; set; }

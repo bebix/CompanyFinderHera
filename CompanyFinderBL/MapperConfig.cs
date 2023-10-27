@@ -15,7 +15,7 @@ namespace CompanyFinderBL.Mappers
         {
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Company, CompanyModel>();
+                cfg.CreateMap<CompanyDTO, CompanyVM>();
             });
             var mapper = new Mapper(config);
             return mapper;

@@ -7,7 +7,7 @@ using CompanyFinderLib.Models;
 
 namespace CompanyFinderBL.Models
 {
-    public class CompanyModel
+    public class CompanyVM
     {
         public string denumire { get; set; }
         public string telefon { get; set; }
@@ -15,7 +15,7 @@ namespace CompanyFinderBL.Models
         public string judet { get; set; }
         public string adresa { get; set; }
 
-        public void SetData(Company company)
+        public void SetData(CompanyDTO company)
         {
             denumire = company.denumire;
             telefon = company.telefon;

@@ -14,7 +14,7 @@ namespace CompanyFinderForm
 {
     public partial class CompaniesTab : Form
     {
-        void AddItemsToListBox(Company company)
+        void AddItemsToListBox(CompanyDTO company)
         {
             listBox1.Items.Add(company.denumire);
             listBox1.Items.Add(company.cif);
@@ -22,7 +22,7 @@ namespace CompanyFinderForm
             listBox1.Items.Add(company.judet);
             listBox1.Items.Add(company.telefon);
         }
-        public CompaniesTab(DataGridView dataGridView, Company company)
+        public CompaniesTab(DataGridView dataGridView, CompanyDTO company)
         {
             InitializeComponent();
             dataGridView1.DataSource = dataGridView.DataSource;

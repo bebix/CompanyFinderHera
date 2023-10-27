@@ -28,7 +28,7 @@ namespace CompanyFinderForm
         {
 
         }
-        void AddItemsToListBox(Company company)
+        void AddItemsToListBox(CompanyDTO company)
         {
             listBox1.Items.Add(company.denumire);
             listBox1.Items.Add(company.cif);

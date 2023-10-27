@@ -14,14 +14,14 @@ namespace CompanyFinderLib.Repos
     public class CacheRepo : ICompanyRepo
     {
 
-        public Company SearchByCui(string id)
+        public CompanyDTO SearchByCui(string id)
         {
             string pathName = $@"{UnitOfWork.path}{id}.json";
             if (File.Exists(pathName))
             { 
                 string text = File.ReadAllText(pathName);
                 dynamic json = JsonConvert.DeserializeObject(text);
-                Company company = new Company();
+                CompanyDTO company = new CompanyDTO();
                 company.denumire = json.denumire;
                 company.cif = json.cif;
                 company.adresa = json.adresa;
@@ -31,16 +31,16 @@ namespace CompanyFinderLib.Repos
             }
             return null;
         }
-        public List<Company> GetAllCompanies()
+        public List<CompanyDTO> GetAllCompanies()
         {
             string[] files = Directory.GetFiles(UnitOfWork.path).Select(file => Path.GetFileNameWithoutExtension(file)).ToArray();
-            List<Company> CompanyListString = new List<Company>();
+            List<CompanyDTO> CompanyListString = new List<CompanyDTO>();
             foreach (string file in files)
             {
                 string pathName = $@"{UnitOfWork.path}{file}.json";
                 string text = File.ReadAllText(pathName);
                 dynamic json = JsonConvert.DeserializeObject(text);
-                Company data = new Company();
+                CompanyDTO data = new CompanyDTO();
                 data.denumire = json.denumire;
                 data.cif = json.cif;
                 data.adresa = json.adresa;
