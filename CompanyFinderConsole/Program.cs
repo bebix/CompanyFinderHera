@@ -6,6 +6,7 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using CompanyFinderLib;
+using CompanyFinderBL.Models;
 using System.Threading;
 using CompanyFinderLib.Models;
 using CompanyFinderLib.WorkUnit;
@@ -13,7 +14,7 @@ using CompanyFinderLib.Contracts;
 using CompanyFinderLib.Repos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using CompanyFinderBL;
 
 namespace CompanyFinderConsole
 {
@@ -41,7 +42,7 @@ namespace CompanyFinderConsole
             Console.WriteLine();
         }
 
-        static void DisplayCompany(Company company)
+        static void DisplayCompany(CompanyModel company)
         {
             Console.WriteLine
             (
@@ -53,37 +54,26 @@ namespace CompanyFinderConsole
             );
         }
 
-        static void DisplayAllCompanies(List<Company> companies)
+        static void DisplayAllCompanies(List<CompanyModel> companies)
         {
             for (int i = 0; i < companies.Count; i++)
                 DisplayCompany(companies[i]);
 
         }
-        public void DisplayInput_GetCompany(UnitOfWork.ApiSource apiSource, List<Company> companies)
+        public void DisplayInput_GetCompany(List<Company> companies)
         {
             string key;
-            int source;
-            UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.anaf);
+            CompanyModel company = new CompanyModel();
             Console.WriteLine("Introduce cif-ul");
             key = Console.ReadLine();
-            Console.WriteLine("Introduce sursa din care vrei sa preiei informatia:");
-            Console.WriteLine("1: Anaf   2: OpenAPI");
-            source = Int32.Parse(Console.ReadLine());
-            apiSource = (UnitOfWork.ApiSource)source;
-            Company company = new Company();
-            company = _rep.SearchInModel(key, companies);
-            if (company != null)
-                DisplayCompany(company);
-            else
-            {
-                rep.AddDataToModel(key, 0, companies);
-                company = rep.SearchInModel(key, companies);
-                DisplayCompany(company);
-            }
+            ModelRepo repo = new ModelRepo();
+            company = repo.GetCompany(companies, key);
+            DisplayCompany(company);
         }
         public void DisplayInput_CreateCompany(List<Company> companies)
         {
-
+            CompanyModel companyModel = new CompanyModel();
+            ModelRepo repo = new ModelRepo();
             string source;
             string index;
             UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.anaf);
@@ -98,10 +88,11 @@ namespace CompanyFinderConsole
             if (FindedCompany != null)
             {
                 Console.WriteLine("Datele firmei gasite sunt:");
-                DisplayCompany(FindedCompany);
+                companyModel = repo.GetCompany(companies, cif);
+                DisplayCompany(companyModel);
                 Console.WriteLine("Doresti sa schimbi anumite informatii?");
                 Console.WriteLine("1: Da       2:Nu");
-                source = Console.ReadLine();
+                source = Console.ReadLine();              
                 if (source == "1")
                 {
                     index = "1";
@@ -118,10 +109,10 @@ namespace CompanyFinderConsole
                                                               , indexInt == 2 ? text : FindedCompany.adresa
                                                               , indexInt == 3 ? text : FindedCompany.telefon
                                                               , indexInt == 4 ? text : FindedCompany.judet);
-
                             _rep.AddUnverifiedDataToModel(company, companies);
+                            companyModel = repo.GetCompany(companies, cif);
                             Console.Clear();
-                            DisplayCompany(company);
+                            DisplayCompany(companyModel);
                         }
                         else
                         {
@@ -139,14 +130,15 @@ namespace CompanyFinderConsole
             }
 
         }
-        public void DisplayInput_DeleteCompany( List<Company> companies)
+        public void DisplayInput_DeleteCompany(List<Company> companies)
         {
-
+            ModelRepo repo = new ModelRepo();
+            List<CompanyModel> companyModels = repo.GetCompanies(companies);
             Console.WriteLine("Introduce cif-ul:             2: Pentru lista firmelor!");
             string id = Console.ReadLine();
             if (id == "2")
             {
-                DisplayAllCompanies(companies);
+                DisplayAllCompanies(companyModels);
                 Console.WriteLine();
                 DisplayInput_DeleteCompany(companies);
             }
@@ -159,14 +151,14 @@ namespace CompanyFinderConsole
                     Console.WriteLine("1: Da       2: Nu");
                     if (Console.ReadLine() == "1")
                     {
-                        _rep.DeleteCompanyInModel(company, companies);
+                        repo.DeleteCompany(companies,company);
                         Console.Clear();
                         Console.WriteLine("Compania a fost stearsa!");
                     }
                 }
                 else if (id.Length > 1)
                 {
-                    var companyQuery2 = companies.Where(x => x.cif.StartsWith(id.Substring(0, 2))).Select(x => x).ToList();
+                    var companyQuery2 = companyModels.Where(x => x.cif.StartsWith(id.Substring(0, 2))).Select(x => x).ToList();
                     Console.WriteLine("Cif-ul nu exista!");
                     Console.WriteLine();
                     Console.WriteLine("Cif-uri asemanatoare:");
@@ -201,6 +193,7 @@ namespace CompanyFinderConsole
         }
         public void DisplayInput_ModifyCompany(List<Company> companies)
         {
+            ModelRepo repo = new ModelRepo();
             Console.WriteLine("Introduce cif-ul");
             string id = Console.ReadLine();
             string source = "1";
@@ -216,10 +209,9 @@ namespace CompanyFinderConsole
                     {
                         string value = null;
                         ModifyValues(company, value, source);
-                        companies.Add(company);
-                        _rep.AddDataToDb(companies, UnitOfWork.path, company.cif, companies.Count - 1, 1);
+                        CompanyModel companyModel = repo.ModifyCompany(companies, company);
                         Console.Clear();
-                        DisplayCompany(company);
+                        DisplayCompany(companyModel);
                     }
                     else
                     {
@@ -245,7 +237,9 @@ namespace CompanyFinderConsole
                     seedText = seed.ToString();
                     if (!jsonCompanies.Contains(companies[index]))
                     {
-                        DisplayCompany(companies[index]);
+                        CompanyModel companyModel = new CompanyModel();
+                        companyModel.SetData(companies[index]);
+                        DisplayCompany(companyModel);
                         jsonCompanies.Add(companies[index]);
                     }
                     else
@@ -269,15 +263,22 @@ namespace CompanyFinderConsole
             UnitOfWork.ApiSource apiSource = UnitOfWork.ApiSource.anaf;
             ok = true;
             companies = _rep.AddDataToModel(null, 1, companies);
+            List<CompanyModel> companyModels = new List<CompanyModel>();
             if (input == "11")
                 Console.Clear();
             if (input == "1")
             {
-                DisplayInput_GetCompany(apiSource, companies);
+                DisplayInput_GetCompany(companies);
             }
             if (input == "2")
             {
-                DisplayAllCompanies(companies);
+                foreach(var i in companies)
+                {
+                    CompanyModel comp = new CompanyModel();
+                    comp.SetData(i);
+                    companyModels.Add(comp);
+                }
+                DisplayAllCompanies(companyModels);
             }
             if (input == "3")
             {
@@ -342,17 +343,24 @@ namespace CompanyFinderConsole
             input = Console.ReadLine();
             string value;
             companies = repo.GetAllCompanies();
+            List<CompanyModel> companyModels = new List<CompanyModel>();
+            foreach (Company company in companies) 
+            {
+                CompanyModel comp = new CompanyModel();
+                comp.SetData(company);
+                companyModels.Add(comp);
+            }
             if (input == "1") //Afiseaza firmele dupa judet
             {
                 Console.WriteLine("Introduce judetul: ");
                 value = Console.ReadLine().ToUpper();
-                var companyQuery2 = companies.Where(x => x.judet.StartsWith(value)).Select(x => x).ToList();
+                var companyQuery2 = companyModels.Where(x => x.judet.StartsWith(value)).Select(x => x).ToList();
                 DisplayAllCompanies(companyQuery2);
 
             }
             if (input == "2") //Situatia pe judet
             {
-                var companyQuery2 = companies.GroupBy(x => x.judet,
+                var companyQuery2 = companyModels.GroupBy(x => x.judet,
                                                (key, x) => new
                                                {
                                                    judet = key,
@@ -369,12 +377,12 @@ namespace CompanyFinderConsole
             {
                 Console.WriteLine("Introduce numele companiei!");
                 value = Console.ReadLine().ToUpper();
-                var companyQuery2 = companies.Where(x => x.denumire.StartsWith(value)).Select(x => x).ToList();
+                var companyQuery2 = companyModels.Where(x => x.denumire.StartsWith(value)).Select(x => x).ToList();
                 DisplayAllCompanies(companyQuery2);
             }
             if (input == "4")
             {
-                var companyQuery2 = companies.GroupBy(x => x.judet,
+                var companyQuery2 = companyModels.GroupBy(x => x.judet,
                                                     (key, x) => new
                                                     {
                                                         judet = key,
