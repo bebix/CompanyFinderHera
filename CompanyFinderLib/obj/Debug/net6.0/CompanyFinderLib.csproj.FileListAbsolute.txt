@@ -22,3 +22,5 @@ D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLi
 D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\refint\CompanyFinderLib.dll
 D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.pdb
 D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\ref\CompanyFinderLib.dll
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\bin\Debug\net6.0\CompanyFinderLib.runtimeconfig.json
+D:\Hera repo\CompanyFinderHera\CompanyFinderLib\obj\Debug\net6.0\CompanyFinderLib.genruntimeconfig.cache

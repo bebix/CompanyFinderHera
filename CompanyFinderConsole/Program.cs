@@ -15,6 +15,7 @@ using CompanyFinderLib.Repos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CompanyFinderBL;
+using CompanyFinderLib.Data;
 
 namespace CompanyFinderConsole
 {
@@ -431,6 +432,7 @@ namespace CompanyFinderConsole
         public static void Main()
         {
             Program p = new Program();
+            DataContext dbRoute = new DataContext();
             List<CompanyDTO> companies = new List<CompanyDTO>();
             string input;
             Display();
