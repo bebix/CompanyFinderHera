@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CompanyFinderLib.Models;
 
-namespace CompanyFinderLib.Contracts
+namespace CompanyFinderLib.Repos
 {
 
     public interface ICompanyRepo

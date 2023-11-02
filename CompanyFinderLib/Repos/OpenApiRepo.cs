@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CompanyFinderLib.Contracts;
 using CompanyFinderLib.Models;
 using RestSharp;
 using Newtonsoft.Json;

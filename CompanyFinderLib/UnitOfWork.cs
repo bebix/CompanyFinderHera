@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading.Tasks;
-using CompanyFinderLib.Contracts;
+using CompanyFinderLib.Data;
 using CompanyFinderLib.Models;
 using CompanyFinderLib.Repos;
 using Microsoft.Extensions.Hosting;
@@ -15,13 +15,15 @@ namespace CompanyFinderLib.WorkUnit
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public enum ApiSource
+        public enum DataSources
         {
             anaf = 1,
             openApi = 2,
-            cache = 3
-        }
+            cache = 3,
+            database = 4
 
+        }
+        
         static dynamic parent = (Directory.GetParent(Directory.GetCurrentDirectory()).Parent).Parent;
         public static string path = @$"{parent.FullName}\MiniDb\";
         public static string otherPath = $@"{parent.FullName}\GenerateCompanies\";
@@ -29,21 +31,47 @@ namespace CompanyFinderLib.WorkUnit
 
 
         private readonly ICompanyRepo repo;
+        private readonly IDataContext context;
+
         public UnitOfWork()
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder();
+            builder.Services.AddTransient<IDataContext, DataContext>();
             builder.Services.AddTransient<ICompanyRepo, CacheRepo>();
             IHost host = builder.Build();
+            context = (IDataContext)host.Services.GetService(typeof(IDataContext));
             repo = (ICompanyRepo)host.Services.GetService(typeof(ICompanyRepo));
-        }
-        public UnitOfWork(ApiSource source)
-        {
-            if (source == ApiSource.anaf)
-                repo = new AnafAPI();
-            else 
-                repo = new OPENAPIRepo();
             
         }
+        public UnitOfWork(DataSources source)
+        {
+
+            HostApplicationBuilder builder = Host.CreateApplicationBuilder();
+            if(source == DataSources.anaf)
+                builder.Services.AddTransient<ICompanyRepo, AnafAPI>();
+            else if(source == DataSources.openApi)
+                builder.Services.AddTransient<ICompanyRepo, OPENAPIRepo>();
+            else if(source == DataSources.cache)
+                builder.Services.AddTransient<ICompanyRepo, CacheRepo>();
+            else
+                builder.Services.AddTransient<IDataContext, DataContext>();
+
+
+            IHost host = builder.Build();
+            if(source == DataSources.database)
+                context = (IDataContext)host.Services.GetService(typeof(IDataContext));
+            else
+                repo = (ICompanyRepo)host.Services.GetService(typeof(ICompanyRepo));
+                
+        }
+        //public UnitOfWork(DataSources source)
+        //{
+        //    if (source == DataSources.anaf)
+        //        repo = new AnafAPI();
+        //    else 
+        //        repo = new OPENAPIRepo();
+            
+        //}
 
         public void AddUnverifiedDataToModel(CompanyDTO company, List<CompanyDTO> companies)
         {

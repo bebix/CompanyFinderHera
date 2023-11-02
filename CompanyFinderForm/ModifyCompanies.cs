@@ -24,12 +24,12 @@ namespace CompanyFinderForm
 
         public void GetCUI(TextBox textBox1, TextBox textBox2, TextBox textBox3, TextBox textBox4, TextBox textBox5)
         {
-            UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.cache);
+            UnitOfWork rep = new UnitOfWork(UnitOfWork.DataSources.cache);
             companies = rep.AddDataToModel(null, 1, null);
             string input = textBox1.Text;
             if (rep.SearchInModel(input, companies) == null && textBox2 != null)
             {
-                rep = new UnitOfWork(UnitOfWork.ApiSource.anaf);
+                rep = new UnitOfWork(UnitOfWork.DataSources.anaf);
                 rep.AddDataToModel(input, 3, companies);
             }
             else
@@ -51,7 +51,7 @@ namespace CompanyFinderForm
         }
         public void AddCompany(TextBox textBox1, TextBox textBox2, TextBox textBox3, TextBox textBox4, TextBox textBox5, string input)
         {
-            UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.cache);
+            UnitOfWork rep = new UnitOfWork(UnitOfWork.DataSources.cache);
             CompanyDTO company = new CompanyDTO();
             company.cif = textBox1.Text;
             company.denumire = textBox2.Text;

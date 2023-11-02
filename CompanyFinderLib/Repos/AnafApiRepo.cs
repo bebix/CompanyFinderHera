@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using RestSharp;
 using Newtonsoft.Json;
 using CompanyFinderLib.Models;
-using CompanyFinderLib.Contracts;
 
 namespace CompanyFinderLib.Repos
 {

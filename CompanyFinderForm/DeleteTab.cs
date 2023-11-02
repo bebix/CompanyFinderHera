@@ -57,7 +57,7 @@ namespace CompanyFinderForm
 
         private void button2_Click(object sender, EventArgs e)
         {
-            UnitOfWork rep = new UnitOfWork(UnitOfWork.ApiSource.anaf);
+            UnitOfWork rep = new UnitOfWork(UnitOfWork.DataSources.anaf);
             rep.DeleteDataFromDb(ModifyCompanies.company.cif);
             rep.DeleteCompanyInModel(ModifyCompanies.company, ModifyCompanies.companies);
             MessageBox.Show("Compania a fost stearsa!");

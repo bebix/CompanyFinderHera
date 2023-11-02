@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
-using CompanyFinderLib.Contracts;
 using CompanyFinderLib.Models;
 using CompanyFinderLib.WorkUnit;
 
